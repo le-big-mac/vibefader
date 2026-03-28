@@ -1,0 +1,390 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0E0430D879A27823CED8F6FD /* OutputDevicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CD3FBD658BC9756A279E4 /* OutputDevicePicker.swift */; };
+		3607CE4CFD4469D687910A90 /* VibeFaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729AEDF0C2D39E85453DBD95 /* VibeFaderApp.swift */; };
+		397880AE37F560AB16072A93 /* AppAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE89531A59CD510C0ACB8ED2 /* AppAudioController.swift */; };
+		42C86595271A14CF2CCC0BF3 /* AudioDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698FB3FA12037B8A538E9417 /* AudioDeviceManager.swift */; };
+		45BD9F9B2C8B62D80F3D8F0C /* CoreAudioHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9637A39204D17476E410A8 /* CoreAudioHelpers.swift */; };
+		4C4CFE21B1251E0E40AB9666 /* VolumePopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204503CD6CDB8494A64D4C49 /* VolumePopoverView.swift */; };
+		4C7C9CA92775366C571DED26 /* AudioProcessDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C31F4F55C343C2F0256CE0E /* AudioProcessDiscovery.swift */; };
+		53528B7B68BDBAAE486E67C8 /* AppIcon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 2EE553D1054BDAF4B049775B /* AppIcon.svg */; };
+		627A4B34CC1A727E1E430F56 /* AudioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816859632670A62735AB65C1 /* AudioApp.swift */; };
+		855B2E28F7B956879133B30B /* AppVolumeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719E3EBC8B946621F93345DA /* AppVolumeRow.swift */; };
+		8C4AED0D3B8B45BA30D3FE00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C70B575DD69449B755B0C01 /* Assets.xcassets */; };
+		DC7552EF9FA36E79BC231D99 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB52C3B43393838A1EBCB179 /* AudioManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		204503CD6CDB8494A64D4C49 /* VolumePopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePopoverView.swift; sourceTree = "<group>"; };
+		2B9637A39204D17476E410A8 /* CoreAudioHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAudioHelpers.swift; sourceTree = "<group>"; };
+		2EE553D1054BDAF4B049775B /* AppIcon.svg */ = {isa = PBXFileReference; path = AppIcon.svg; sourceTree = "<group>"; };
+		349953C57753B0CDC2DD43F0 /* VibeFader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VibeFader.entitlements; sourceTree = "<group>"; };
+		5C70B575DD69449B755B0C01 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		698FB3FA12037B8A538E9417 /* AudioDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceManager.swift; sourceTree = "<group>"; };
+		6C31F4F55C343C2F0256CE0E /* AudioProcessDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcessDiscovery.swift; sourceTree = "<group>"; };
+		719E3EBC8B946621F93345DA /* AppVolumeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVolumeRow.swift; sourceTree = "<group>"; };
+		729AEDF0C2D39E85453DBD95 /* VibeFaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeFaderApp.swift; sourceTree = "<group>"; };
+		816859632670A62735AB65C1 /* AudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioApp.swift; sourceTree = "<group>"; };
+		AD1865E7497CF404DBD0715A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B96CD3FBD658BC9756A279E4 /* OutputDevicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputDevicePicker.swift; sourceTree = "<group>"; };
+		CB52C3B43393838A1EBCB179 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		F8912451F55F2B9FB7BD1210 /* VibeFader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VibeFader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE89531A59CD510C0ACB8ED2 /* AppAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAudioController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		318FE502C2C699EADF3CF021 = {
+			isa = PBXGroup;
+			children = (
+				7DA88C398A1CDD2EDBF11ACC /* VibeFader */,
+				7C112F2F051CB25ECA93F240 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		578884F674CAE5DAA4FEEFBD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				719E3EBC8B946621F93345DA /* AppVolumeRow.swift */,
+				B96CD3FBD658BC9756A279E4 /* OutputDevicePicker.swift */,
+				204503CD6CDB8494A64D4C49 /* VolumePopoverView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		64969CB93A15114A47C3AAB6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2EE553D1054BDAF4B049775B /* AppIcon.svg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7C112F2F051CB25ECA93F240 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F8912451F55F2B9FB7BD1210 /* VibeFader.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7DA88C398A1CDD2EDBF11ACC /* VibeFader */ = {
+			isa = PBXGroup;
+			children = (
+				5C70B575DD69449B755B0C01 /* Assets.xcassets */,
+				AD1865E7497CF404DBD0715A /* Info.plist */,
+				349953C57753B0CDC2DD43F0 /* VibeFader.entitlements */,
+				729AEDF0C2D39E85453DBD95 /* VibeFaderApp.swift */,
+				A7A2788BCE974C05AD6B3E7B /* Audio */,
+				A305C239256ADDDA8EA24F2E /* Models */,
+				64969CB93A15114A47C3AAB6 /* Resources */,
+				578884F674CAE5DAA4FEEFBD /* Views */,
+			);
+			path = VibeFader;
+			sourceTree = "<group>";
+		};
+		A305C239256ADDDA8EA24F2E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				816859632670A62735AB65C1 /* AudioApp.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A7A2788BCE974C05AD6B3E7B /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				FE89531A59CD510C0ACB8ED2 /* AppAudioController.swift */,
+				698FB3FA12037B8A538E9417 /* AudioDeviceManager.swift */,
+				CB52C3B43393838A1EBCB179 /* AudioManager.swift */,
+				6C31F4F55C343C2F0256CE0E /* AudioProcessDiscovery.swift */,
+				2B9637A39204D17476E410A8 /* CoreAudioHelpers.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B9F440BEA742DE41B13B2FE8 /* VibeFader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6987DCF18F50A52442DCC9AC /* Build configuration list for PBXNativeTarget "VibeFader" */;
+			buildPhases = (
+				3541501491CCB405614476CE /* Sources */,
+				08BEF40779AB20B5AD223004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VibeFader;
+			packageProductDependencies = (
+			);
+			productName = VibeFader;
+			productReference = F8912451F55F2B9FB7BD1210 /* VibeFader.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5B70AC6E402C35FE447E52A2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					B9F440BEA742DE41B13B2FE8 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A1BC16309D73BCCC9A827B9A /* Build configuration list for PBXProject "VibeFader" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 318FE502C2C699EADF3CF021;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7C112F2F051CB25ECA93F240 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B9F440BEA742DE41B13B2FE8 /* VibeFader */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		08BEF40779AB20B5AD223004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53528B7B68BDBAAE486E67C8 /* AppIcon.svg in Resources */,
+				8C4AED0D3B8B45BA30D3FE00 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3541501491CCB405614476CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				397880AE37F560AB16072A93 /* AppAudioController.swift in Sources */,
+				855B2E28F7B956879133B30B /* AppVolumeRow.swift in Sources */,
+				627A4B34CC1A727E1E430F56 /* AudioApp.swift in Sources */,
+				42C86595271A14CF2CCC0BF3 /* AudioDeviceManager.swift in Sources */,
+				DC7552EF9FA36E79BC231D99 /* AudioManager.swift in Sources */,
+				4C7C9CA92775366C571DED26 /* AudioProcessDiscovery.swift in Sources */,
+				45BD9F9B2C8B62D80F3D8F0C /* CoreAudioHelpers.swift in Sources */,
+				0E0430D879A27823CED8F6FD /* OutputDevicePicker.swift in Sources */,
+				3607CE4CFD4469D687910A90 /* VibeFaderApp.swift in Sources */,
+				4C4CFE21B1251E0E40AB9666 /* VolumePopoverView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3DB269C20C1238A40E5D0F0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = VibeFader/VibeFader.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VibeFader/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chadon.VibeFader;
+				PRODUCT_NAME = VibeFader;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
+		};
+		5F914DBAA88F33CB35EA6D8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		895261CEFA9DCC03E840F80B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		BB5CB04F44ECCA13F094C670 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = VibeFader/VibeFader.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VibeFader/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chadon.VibeFader;
+				PRODUCT_NAME = VibeFader;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6987DCF18F50A52442DCC9AC /* Build configuration list for PBXNativeTarget "VibeFader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DB269C20C1238A40E5D0F0A /* Debug */,
+				BB5CB04F44ECCA13F094C670 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A1BC16309D73BCCC9A827B9A /* Build configuration list for PBXProject "VibeFader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F914DBAA88F33CB35EA6D8B /* Debug */,
+				895261CEFA9DCC03E840F80B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5B70AC6E402C35FE447E52A2 /* Project object */;
+}

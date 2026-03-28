@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Main background gradient: deep purple to vibrant blue -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6C3CE1"/>
+      <stop offset="50%" stop-color="#4A6CF7"/>
+      <stop offset="100%" stop-color="#2DD4BF"/>
+    </linearGradient>
+
+    <!-- Subtle inner shadow / shine overlay -->
+    <linearGradient id="shineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.15"/>
+    </linearGradient>
+
+    <!-- Speaker cone gradient -->
+    <linearGradient id="speakerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#e0e7ff" stop-opacity="0.90"/>
+    </linearGradient>
+
+    <!-- Slider track gradient -->
+    <linearGradient id="sliderTrack" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.10"/>
+    </linearGradient>
+
+    <!-- Slider fill gradients for each channel -->
+    <linearGradient id="fillGreen" x1="0%" y1="1%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="fillBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="fillPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+
+    <!-- Glow filter for sound waves -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft drop shadow for the icon shape -->
+    <filter id="innerShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- macOS-style rounded rect clip -->
+    <clipPath id="iconClip">
+      <rect x="16" y="16" width="480" height="480" rx="108" ry="108"/>
+    </clipPath>
+  </defs>
+
+  <!-- macOS rounded-square background with shadow -->
+  <g filter="url(#innerShadow)">
+    <rect x="16" y="16" width="480" height="480" rx="108" ry="108" fill="url(#bgGrad)"/>
+  </g>
+
+  <!-- Shine overlay -->
+  <rect x="16" y="16" width="480" height="480" rx="108" ry="108" fill="url(#shineGrad)"/>
+
+  <!-- Subtle border -->
+  <rect x="16" y="16" width="480" height="480" rx="108" ry="108"
+        fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+
+  <!-- Content group clipped to icon shape -->
+  <g clip-path="url(#iconClip)">
+
+    <!-- Speaker icon (left side) -->
+    <g transform="translate(88, 156)">
+      <!-- Speaker body -->
+      <rect x="0" y="60" width="48" height="80" rx="8" fill="url(#speakerGrad)"/>
+      <!-- Speaker cone -->
+      <polygon points="48,60 110,16 110,184 48,140" fill="url(#speakerGrad)"/>
+      <!-- Rounded edge on cone -->
+      <rect x="104" y="16" width="12" height="168" rx="6" fill="url(#speakerGrad)"/>
+    </g>
+
+    <!-- Sound waves emanating from speaker -->
+    <g transform="translate(218, 256)" filter="url(#glow)">
+      <!-- Wave 1 (closest) -->
+      <path d="M 0,-40 Q 22,-40 22,0 Q 22,40 0,40"
+            fill="none" stroke="#ffffff" stroke-opacity="0.85" stroke-width="5" stroke-linecap="round"/>
+      <!-- Wave 2 -->
+      <path d="M 14,-64 Q 46,-64 46,0 Q 46,64 14,64"
+            fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="4.5" stroke-linecap="round"/>
+      <!-- Wave 3 (farthest) -->
+      <path d="M 28,-88 Q 70,-88 70,0 Q 70,88 28,88"
+            fill="none" stroke="#ffffff" stroke-opacity="0.30" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <!-- Per-app mixer sliders (right side) — 3 channels at different levels -->
+    <g transform="translate(330, 128)">
+      <!-- Slider 1 — tall (green) -->
+      <g>
+        <rect x="0" y="0" width="24" height="200" rx="12" fill="url(#sliderTrack)"/>
+        <rect x="0" y="40" width="24" height="160" rx="12" fill="url(#fillGreen)"/>
+        <!-- Knob -->
+        <circle cx="12" cy="44" r="14" fill="#ffffff" fill-opacity="0.95"/>
+        <circle cx="12" cy="44" r="8" fill="#34D399"/>
+      </g>
+
+      <!-- Slider 2 — medium (blue) -->
+      <g transform="translate(50, 0)">
+        <rect x="0" y="0" width="24" height="200" rx="12" fill="url(#sliderTrack)"/>
+        <rect x="0" y="90" width="24" height="110" rx="12" fill="url(#fillBlue)"/>
+        <!-- Knob -->
+        <circle cx="12" cy="94" r="14" fill="#ffffff" fill-opacity="0.95"/>
+        <circle cx="12" cy="94" r="8" fill="#3B82F6"/>
+      </g>
+
+      <!-- Slider 3 — low (purple) -->
+      <g transform="translate(100, 0)">
+        <rect x="0" y="0" width="24" height="200" rx="12" fill="url(#sliderTrack)"/>
+        <rect x="0" y="140" width="24" height="60" rx="12" fill="url(#fillPurple)"/>
+        <!-- Knob -->
+        <circle cx="12" cy="144" r="14" fill="#ffffff" fill-opacity="0.95"/>
+        <circle cx="12" cy="144" r="8" fill="#A855F7"/>
+      </g>
+    </g>
+
+    <!-- Small app-indicator dots below sliders -->
+    <g transform="translate(330, 348)">
+      <circle cx="12" cy="0" r="6" fill="#34D399" fill-opacity="0.8"/>
+      <circle cx="62" cy="0" r="6" fill="#3B82F6" fill-opacity="0.8"/>
+      <circle cx="112" cy="0" r="6" fill="#A855F7" fill-opacity="0.8"/>
+    </g>
+
+    <!-- Subtle divider line between speaker and sliders -->
+    <line x1="310" y1="148" x2="310" y2="368" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5" stroke-linecap="round"/>
+
+  </g>
+</svg>
