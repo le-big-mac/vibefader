@@ -12,11 +12,12 @@ VibeFader sits in your menu bar and lets you independently control the volume of
 
 VibeFader uses the **Core Audio Tap API** (macOS 14.2+) — no virtual audio drivers, no kernel extensions, no jank.
 
-1. A **muting tap** intercepts each app's audio stream
+1. When you lower an app's volume, a **muting tap** intercepts its audio stream
 2. An **IOProc** reads the captured audio into a ring buffer
 3. An **AVAudioEngine** plays it back at your chosen volume
+4. When you set volume back to 100%, the tap is removed and audio passes through natively
 
-Taps run continuously for all detected audio apps with passthrough at 100% by default. No audio quality loss, minimal latency.
+No audio quality loss, minimal latency. Taps are only active for apps you've adjusted — zero overhead otherwise.
 
 ## Requirements
 
@@ -93,7 +94,7 @@ The core audio pipeline in `AppAudioController`:
 
 ## Known limitations
 
-- **FaceTime, Zoom, Teams** — These apps route audio through system daemons (`avconferenced`, `callservicesd`) rather than their own process. The Core Audio Tap API can only tap the process that owns the audio, so VoIP apps aren't controllable with this approach.
+- **FaceTime, Zoom, Teams** — These apps route audio through system daemons (`avconferenced`, `callservicesd`) rather than their own process. You can control them by adjusting the volume on `avconferenced` in the app list, but note that these daemons carry a low-amplitude signal — small slider changes can have an outsized effect on perceived volume.
 - **macOS 14.2+ only** — The Core Audio Tap API was introduced in macOS 14.2 Sonoma.
 - **Permission setup** — Requires `kTCCServiceAudioCapture` which macOS doesn't auto-prompt for. The build script handles this via direct TCC database insertion.
 
