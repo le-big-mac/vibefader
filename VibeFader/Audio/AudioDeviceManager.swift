@@ -100,6 +100,18 @@ final class AudioDeviceManager: @unchecked Sendable {
         }
     }
 
+    func onVolumeChanged(deviceID: AudioObjectID, _ handler: @escaping @Sendable () -> Void) throws {
+        try addAudioPropertyListener(
+            objectID: deviceID,
+            address: audioObjectPropertyAddress(
+                selector: kAudioHardwareServiceDeviceProperty_VirtualMainVolume,
+                scope: kAudioDevicePropertyScopeOutput
+            )
+        ) { _, _ in
+            handler()
+        }
+    }
+
     func onDeviceListChanged(_ handler: @escaping @Sendable () -> Void) throws {
         try addAudioPropertyListener(
             objectID: AudioObjectID(kAudioObjectSystemObject),

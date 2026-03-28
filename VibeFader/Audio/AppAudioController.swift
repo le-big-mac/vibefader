@@ -265,7 +265,14 @@ final class AppAudioController: @unchecked Sendable {
 
     func setVolume(_ newVolume: Float) {
         let clamped = min(max(newVolume, 0), 1)
-        volume = useSoftCurve && clamped > 0 ? powf(clamped, 0.3) : clamped
+        if useSoftCurve {
+            // System daemons (avconferenced etc.) have very low amplitude.
+            // Compress slider range: 0→0, then 0.8 + 0.2*slider for everything else.
+            // slider 1% → 0.80, 50% → 0.90, 100% → 1.0
+            volume = clamped > 0 ? 0.8 + 0.2 * clamped : 0
+        } else {
+            volume = clamped
+        }
     }
 
     func updateOutputDevice(_ deviceID: AudioObjectID) throws {

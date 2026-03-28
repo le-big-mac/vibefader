@@ -145,6 +145,18 @@ final class AudioManager: ObservableObject {
                 self.refreshDevices()
                 self.refreshSystemVolume()
                 self.restartActiveControllers()
+                self.listenForVolumeChanges()
+            }
+        }
+
+        listenForVolumeChanges()
+    }
+
+    private func listenForVolumeChanges() {
+        guard selectedOutputDeviceID != kAudioObjectUnknown else { return }
+        try? deviceManager.onVolumeChanged(deviceID: selectedOutputDeviceID) { [weak self] in
+            Task { @MainActor [weak self] in
+                self?.refreshSystemVolume()
             }
         }
     }
