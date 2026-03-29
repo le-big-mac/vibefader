@@ -111,11 +111,10 @@ final class AudioManager: ObservableObject {
 
         let controller = AppAudioController(pid: app.pid)
 
-        // System daemons have low-amplitude tap signals — use softer curve + gain boost
-        let softCurveIDs: Set<String> = ["com.apple.avconferenced", "com.apple.callservicesd"]
-        if softCurveIDs.contains(app.bundleIdentifier) {
-            controller.useSoftCurve = true
-            controller.gain = 10.0 // boost ~20dB to match native playback level
+        // System daemons have low-amplitude tap signals — boost to match native level
+        let daemonIDs: Set<String> = ["com.apple.avconferenced", "com.apple.callservicesd"]
+        if daemonIDs.contains(app.bundleIdentifier) {
+            controller.gain = 10.0 // ~20dB boost, soft-clipped in render callback
         }
 
         controllers[app.pid] = controller

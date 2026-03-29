@@ -14,7 +14,6 @@ import Foundation
 @available(macOS 14.2, *)
 final class AppAudioController: @unchecked Sendable {
     let pid: pid_t
-    var useSoftCurve = false // for system daemons with low-amplitude audio
     private(set) var isRunning = false
 
     // Core Audio objects
