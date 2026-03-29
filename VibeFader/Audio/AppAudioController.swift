@@ -40,7 +40,6 @@ final class AppAudioController: @unchecked Sendable {
     // Fixed gain boost for system daemons whose tap signal is much quieter
     // than their native playback level
     var gain: Float = 1.0
-    private var ioCallbackCount: Int = 0
 
     private let discovery = AudioProcessDiscovery()
 
@@ -59,10 +58,8 @@ final class AppAudioController: @unchecked Sendable {
 
         // 1. Get process object ID from PID
         guard let processObjectID = discovery.processObjectID(for: pid) else {
-            NSLog("[VibeFader] No process object for PID \(pid)")
             throw AudioError.deviceNotFound
         }
-        NSLog("[VibeFader] PID \(pid) → process object \(processObjectID)")
 
         // 2. Create per-process muting tap
         let tapDesc = CATapDescription(stereoMixdownOfProcesses: [processObjectID])
@@ -77,13 +74,11 @@ final class AppAudioController: @unchecked Sendable {
             throw AudioError.tapCreationFailed(status)
         }
         self.tapID = tapObjectID
-        NSLog("[VibeFader] Tap created: \(tapObjectID), UUID: \(tapDesc.uuid.uuidString)")
 
         // 3. Get tap audio format
         let tapFormat = getTapFormat(tapID: tapObjectID)
         let sampleRate = tapFormat.mSampleRate > 0 ? tapFormat.mSampleRate : 48000
         let channels = tapFormat.mChannelsPerFrame > 0 ? Int(tapFormat.mChannelsPerFrame) : 2
-        NSLog("[VibeFader] Tap format: \(sampleRate)Hz, \(channels)ch, flags=\(tapFormat.mFormatFlags)")
 
         // 4. Create TAP-ONLY aggregate device (no hardware sub-device!)
         let aggDict: [String: Any] = [
@@ -107,7 +102,6 @@ final class AppAudioController: @unchecked Sendable {
             throw AudioError.aggregateDeviceFailed(status)
         }
         self.aggregateDeviceID = aggID
-        NSLog("[VibeFader] Aggregate device: \(aggID)")
 
         // 5. Allocate per-channel ring buffers (~340ms at 48kHz)
         numChannels = channels
@@ -127,18 +121,11 @@ final class AppAudioController: @unchecked Sendable {
             inNow, inInputData, inInputTime, outOutputData, outOutputTime in
 
             let ctrl = Unmanaged<AppAudioController>.fromOpaque(controllerPtr).takeUnretainedValue()
-            ctrl.ioCallbackCount += 1
 
             let numBufs = Int(inInputData.pointee.mNumberBuffers)
             guard numBufs > 0 else { return }
 
             let abl = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: inInputData))
-
-            // Log format details on first callback
-            if ctrl.ioCallbackCount == 1 {
-                let b = abl[0]
-                NSLog("[VibeFader] PID \(ctrl.pid) IOProc: bufs=\(numBufs) size=\(b.mDataByteSize) ch=\(b.mNumberChannels)")
-            }
 
             let cap = ctrl.ringCapacity
             let wp = ctrl.ringWritePos
@@ -180,7 +167,6 @@ final class AppAudioController: @unchecked Sendable {
                 NSError(domain: NSOSStatusErrorDomain, code: Int(status)))
         }
         self.ioProcID = procID
-        NSLog("[VibeFader] IOProc registered")
 
         // 7. Create AVAudioEngine with AVAudioSourceNode (output only, no inputNode!)
         let avFormat = AVAudioFormat(
@@ -246,7 +232,6 @@ final class AppAudioController: @unchecked Sendable {
 
         do {
             try newEngine.start()
-            NSLog("[VibeFader] Engine started (after IOProc primed)")
         } catch {
             NSLog("[VibeFader] Engine start failed: \(error)")
             AudioDeviceStop(aggID, procID)
@@ -259,7 +244,6 @@ final class AppAudioController: @unchecked Sendable {
         self.engine = newEngine
 
         self.isRunning = true
-        NSLog("[VibeFader] Controller running for PID \(pid)")
     }
 
     func stop() {

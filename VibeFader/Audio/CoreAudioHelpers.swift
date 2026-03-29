@@ -100,14 +100,6 @@ func addAudioPropertyListener(
     }
 }
 
-func removeAudioPropertyListener(
-    objectID: AudioObjectID,
-    address: AudioObjectPropertyAddress,
-    listener: @escaping AudioObjectPropertyListenerBlock
-) {
-    var address = address
-    AudioObjectRemovePropertyListenerBlock(objectID, &address, DispatchQueue.main, listener)
-}
 
 // MARK: - Error Type
 

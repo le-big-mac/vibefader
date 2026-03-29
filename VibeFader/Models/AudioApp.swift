@@ -1,5 +1,4 @@
 import AppKit
-import CoreAudio
 import Foundation
 
 /// Represents an app whose volume can be controlled. Value type — all state lives in AudioManager.
@@ -10,7 +9,6 @@ struct AudioApp: Identifiable, Hashable {
     let icon: NSImage
     var volume: Float = 1.0
     var isMuted: Bool = false
-    var isControlActive: Bool = false
 
     var id: pid_t { pid }
 

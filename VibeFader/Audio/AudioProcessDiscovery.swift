@@ -4,7 +4,6 @@ import Foundation
 
 struct AudioProcess: Identifiable, Hashable {
     let pid: pid_t
-    let processObjectID: AudioObjectID
     let bundleIdentifier: String
     let name: String
     let icon: NSImage
@@ -49,17 +48,14 @@ final class AudioProcessDiscovery: @unchecked Sendable {
                 type: pid_t.self
             ) else { continue }
 
-            // Skip our own process
             if pid == ProcessInfo.processInfo.processIdentifier { continue }
 
-            // Match to running application for name and icon
             if let app = runningApps.first(where: { $0.processIdentifier == pid }),
                let name = app.localizedName {
                 let icon = app.icon ?? NSImage(systemSymbolName: "app.fill", accessibilityDescription: nil)!
                 let bundleID = app.bundleIdentifier ?? "pid-\(pid)"
                 results.append(AudioProcess(
                     pid: pid,
-                    processObjectID: objectID,
                     bundleIdentifier: bundleID,
                     name: name,
                     icon: icon
@@ -99,7 +95,6 @@ final class AudioProcessDiscovery: @unchecked Sendable {
                 let icon = app.icon ?? NSImage(systemSymbolName: "app.fill", accessibilityDescription: nil)!
                 return AudioProcess(
                     pid: app.processIdentifier,
-                    processObjectID: kAudioObjectUnknown,
                     bundleIdentifier: app.bundleIdentifier ?? "pid-\(app.processIdentifier)",
                     name: name,
                     icon: icon
