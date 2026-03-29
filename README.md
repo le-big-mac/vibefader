@@ -94,7 +94,7 @@ The core audio pipeline in `AppAudioController`:
 
 ## Known limitations
 
-- **FaceTime, Zoom, Teams** — These apps route audio through system daemons (`avconferenced`, `callservicesd`) rather than their own process. You can control them by adjusting the volume on `avconferenced` in the app list, but note that these daemons carry a low-amplitude signal — small slider changes can have an outsized effect on perceived volume.
+- **FaceTime, Zoom, Teams** — These apps route audio through system daemons (`avconferenced`, `callservicesd`) rather than their own process. You can control them by adjusting the volume on `avconferenced` in the app list. Note that the tap captures these daemons at a much lower amplitude than normal apps, so VibeFader applies a 10x gain boost with soft clipping to match native levels. Volume control works but may not be as precise as for regular apps like Spotify or Firefox.
 - **macOS 14.2+ only** — The Core Audio Tap API was introduced in macOS 14.2 Sonoma.
 - **Permission setup** — Requires `kTCCServiceAudioCapture` which macOS doesn't auto-prompt for. The build script handles this via direct TCC database insertion.
 

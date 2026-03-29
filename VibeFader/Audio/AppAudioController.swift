@@ -38,7 +38,9 @@ final class AppAudioController: @unchecked Sendable {
     // Volume (read from render thread, written from main thread)
     var volume: Float = 1.0
 
-    // Diagnostics
+    // Fixed gain boost for system daemons whose tap signal is much quieter
+    // than their native playback level
+    var gain: Float = 1.0
     private var ioCallbackCount: Int = 0
 
     private let discovery = AudioProcessDiscovery()
@@ -126,11 +128,19 @@ final class AppAudioController: @unchecked Sendable {
             inNow, inInputData, inInputTime, outOutputData, outOutputTime in
 
             let ctrl = Unmanaged<AppAudioController>.fromOpaque(controllerPtr).takeUnretainedValue()
+            ctrl.ioCallbackCount += 1
 
             let numBufs = Int(inInputData.pointee.mNumberBuffers)
             guard numBufs > 0 else { return }
 
             let abl = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: inInputData))
+
+            // Log format details on first callback
+            if ctrl.ioCallbackCount == 1 {
+                let b = abl[0]
+                NSLog("[VibeFader] PID \(ctrl.pid) IOProc: bufs=\(numBufs) size=\(b.mDataByteSize) ch=\(b.mNumberChannels)")
+            }
+
             let cap = ctrl.ringCapacity
             let wp = ctrl.ringWritePos
             let nch = ctrl.numChannels
@@ -159,6 +169,7 @@ final class AppAudioController: @unchecked Sendable {
                 }
                 ctrl.ringWritePos = (wp + frameCount) % cap
             }
+
 
         }
 
@@ -198,11 +209,15 @@ final class AppAudioController: @unchecked Sendable {
                 rp = (wp - ctrl.targetGap + cap) % cap
             }
 
+            let g = ctrl.gain
+
             for ch in 0..<chCount {
                 let src = ctrl.ringChannels[ch]
                 let dst = abl[ch].mData!.assumingMemoryBound(to: Float.self)
                 for f in 0..<frames {
-                    dst[f] = src[(rp + f) % cap] * vol
+                    let sample = src[(rp + f) % cap] * vol * g
+                    // Soft clip to prevent distortion from gain boost
+                    dst[f] = sample > 1.0 ? 1.0 : (sample < -1.0 ? -1.0 : sample)
                 }
             }
 
@@ -264,15 +279,7 @@ final class AppAudioController: @unchecked Sendable {
     }
 
     func setVolume(_ newVolume: Float) {
-        let clamped = min(max(newVolume, 0), 1)
-        if useSoftCurve {
-            // System daemons (avconferenced etc.) have very low amplitude.
-            // Compress slider range: 0→0, then 0.8 + 0.2*slider for everything else.
-            // slider 1% → 0.80, 50% → 0.90, 100% → 1.0
-            volume = clamped > 0 ? 0.8 + 0.2 * clamped : 0
-        } else {
-            volume = clamped
-        }
+        volume = min(max(newVolume, 0), 1)
     }
 
     func updateOutputDevice(_ deviceID: AudioObjectID) throws {
