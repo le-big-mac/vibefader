@@ -123,7 +123,13 @@ struct VolumePopoverView: View {
             }
             .padding(.vertical, 6)
         }
-        .frame(maxHeight: 300)
+        .frame(height: appListHeight)
+    }
+
+    private var appListHeight: CGFloat {
+        let rowHeight: CGFloat = 34
+        let verticalPadding: CGFloat = 12
+        return min(CGFloat(audioManager.audioApps.count) * rowHeight + verticalPadding, 300)
     }
 
     private var systemVolumeIcon: String {

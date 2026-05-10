@@ -1,5 +1,6 @@
 import AppKit
 import CoreAudio
+import Darwin
 import Foundation
 
 struct AudioProcess: Identifiable, Hashable {
@@ -26,6 +27,10 @@ final class AudioProcessDiscovery: @unchecked Sendable {
     private static let processObjectListSelector = AudioObjectPropertySelector(0x70727323)
     // 'ppid' - PID of an audio process object
     private static let processPIDSelector = AudioObjectPropertySelector(0x70706964)
+    private static let knownAudioDaemons: [String: (bundleID: String, displayName: String)] = [
+        "avconferenced": ("com.apple.avconferenced", "avconferenced"),
+        "callservicesd": ("com.apple.callservicesd", "callservicesd"),
+    ]
 
     /// Discovers apps that currently have audio sessions via Core Audio's process object list.
     func discoverAudioProcesses() -> [AudioProcess] {
@@ -50,16 +55,8 @@ final class AudioProcessDiscovery: @unchecked Sendable {
 
             if pid == ProcessInfo.processInfo.processIdentifier { continue }
 
-            if let app = runningApps.first(where: { $0.processIdentifier == pid }),
-               let name = app.localizedName {
-                let icon = app.icon ?? NSImage(systemSymbolName: "app.fill", accessibilityDescription: nil)!
-                let bundleID = app.bundleIdentifier ?? "pid-\(pid)"
-                results.append(AudioProcess(
-                    pid: pid,
-                    bundleIdentifier: bundleID,
-                    name: name,
-                    icon: icon
-                ))
+            if let process = audioProcess(for: pid, runningApps: runningApps) {
+                results.append(process)
             }
         }
 
@@ -101,5 +98,88 @@ final class AudioProcessDiscovery: @unchecked Sendable {
                 )
             }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
+
+    private func audioProcess(for pid: pid_t, runningApps: [NSRunningApplication]) -> AudioProcess? {
+        if let app = runningApps.first(where: { $0.processIdentifier == pid }),
+           let name = app.localizedName {
+            let icon = app.icon ?? fallbackIcon()
+            let bundleID = app.bundleIdentifier ?? "pid-\(pid)"
+            return AudioProcess(pid: pid, bundleIdentifier: bundleID, name: name, icon: icon)
+        }
+
+        if let bundledProcess = bundledProcess(for: pid) {
+            return bundledProcess
+        }
+
+        if let daemonProcess = daemonProcess(for: pid) {
+            return daemonProcess
+        }
+
+        guard let processName = processName(for: pid) else { return nil }
+        return AudioProcess(
+            pid: pid,
+            bundleIdentifier: "pid-\(pid)",
+            name: processName,
+            icon: fallbackIcon()
+        )
+    }
+
+    private func bundledProcess(for pid: pid_t) -> AudioProcess? {
+        guard let executablePath = executablePath(for: pid),
+              let appURL = containingAppURL(for: executablePath),
+              let bundle = Bundle(url: appURL) else {
+            return nil
+        }
+
+        let bundleID = bundle.bundleIdentifier ?? "pid-\(pid)"
+        let name = bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            ?? bundle.object(forInfoDictionaryKey: "CFBundleName") as? String
+            ?? appURL.deletingPathExtension().lastPathComponent
+        let icon = NSWorkspace.shared.icon(forFile: appURL.path)
+
+        return AudioProcess(pid: pid, bundleIdentifier: bundleID, name: name, icon: icon)
+    }
+
+    private func daemonProcess(for pid: pid_t) -> AudioProcess? {
+        guard let processName = processName(for: pid),
+              let daemon = Self.knownAudioDaemons[processName] else {
+            return nil
+        }
+
+        return AudioProcess(
+            pid: pid,
+            bundleIdentifier: daemon.bundleID,
+            name: daemon.displayName,
+            icon: fallbackIcon()
+        )
+    }
+
+    private func containingAppURL(for executablePath: String) -> URL? {
+        let components = executablePath.split(separator: "/")
+        guard let appIndex = components.firstIndex(where: { $0.hasSuffix(".app") }) else {
+            return nil
+        }
+
+        let appPath = "/" + components[...appIndex].joined(separator: "/")
+        return URL(fileURLWithPath: appPath)
+    }
+
+    private func executablePath(for pid: pid_t) -> String? {
+        var buffer = [CChar](repeating: 0, count: Int(4 * MAXPATHLEN))
+        let length = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+        guard length > 0 else { return nil }
+        return String(cString: buffer)
+    }
+
+    private func processName(for pid: pid_t) -> String? {
+        var buffer = [CChar](repeating: 0, count: Int(MAXPATHLEN))
+        let length = proc_name(pid, &buffer, UInt32(buffer.count))
+        guard length > 0 else { return nil }
+        return String(cString: buffer)
+    }
+
+    private func fallbackIcon() -> NSImage {
+        NSImage(systemSymbolName: "app.fill", accessibilityDescription: nil)!
     }
 }

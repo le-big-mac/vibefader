@@ -28,5 +28,7 @@
     <string>NSApplication</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>VibeFader needs audio access to control per-app volume.</string>
+    <key>NSAudioCaptureUsageDescription</key>
+    <string>VibeFader needs system audio access to control per-app volume.</string>
 </dict>
 </plist>
