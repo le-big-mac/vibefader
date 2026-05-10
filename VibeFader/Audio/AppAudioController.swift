@@ -212,6 +212,7 @@ final class AppAudioController: @unchecked Sendable {
 
         newEngine.attach(sourceNode)
         newEngine.connect(sourceNode, to: newEngine.mainMixerNode, format: avFormat)
+        try configureOutputDevice(outputDeviceID, for: newEngine)
         newEngine.prepare()
 
         // 8. Start the aggregate device IO FIRST (fills ring buffer before engine reads)
@@ -287,6 +288,27 @@ final class AppAudioController: @unchecked Sendable {
             NSLog("[VibeFader] kAudioTapPropertyFormat failed: \(status)")
         }
         return format
+    }
+
+    private func configureOutputDevice(_ deviceID: AudioObjectID, for engine: AVAudioEngine) throws {
+        guard deviceID != kAudioObjectUnknown,
+              let audioUnit = engine.outputNode.audioUnit else {
+            return
+        }
+
+        var outputDeviceID = AudioDeviceID(deviceID)
+        let status = AudioUnitSetProperty(
+            audioUnit,
+            kAudioOutputUnitProperty_CurrentDevice,
+            kAudioUnitScope_Global,
+            0,
+            &outputDeviceID,
+            UInt32(MemoryLayout<AudioDeviceID>.size)
+        )
+        guard status == noErr else {
+            NSLog("[VibeFader] Output device selection failed: \(status)")
+            throw AudioError.propertyError(status)
+        }
     }
 
     private func cleanupRingBuffer() {
