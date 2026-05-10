@@ -34,6 +34,7 @@ cd vibefader
 ```
 
 This builds a Release binary, copies it to `/Applications/VibeFader.app`, and sets up the required permissions.
+The script also regenerates `VibeFader.xcodeproj` with XcodeGen before building.
 
 ### Permissions
 
@@ -41,6 +42,8 @@ VibeFader needs **Audio Capture** permission to intercept app audio. The build s
 
 You should also grant **Screen & System Audio Recording** permission in:
 **System Settings → Privacy & Security → Screen & System Audio Recording**
+
+On macOS Tahoe, this may appear as **System Audio Recording Only**. VibeFader includes the system-audio usage description key required by newer macOS versions.
 
 > **Note:** The build script modifies `~/Library/Application Support/com.apple.TCC/TCC.db` to grant the audio capture permission. This is the same database macOS uses to track your privacy choices. The entry can be removed with: `sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "DELETE FROM access WHERE client='com.chadon.VibeFader' AND service='kTCCServiceAudioCapture'"`
 
@@ -51,6 +54,8 @@ You should also grant **Screen & System Audio Recording** permission in:
 3. Drag a slider to adjust that app's volume
 4. Click the speaker icon next to an app to mute/unmute it
 5. Use the output device picker at the bottom to switch audio output
+
+Some apps, including browsers and Spotify, play audio from helper or renderer processes. VibeFader resolves those helpers back to the owning app and shows a single row when possible.
 
 ## Building from source
 
