@@ -19,6 +19,9 @@ final class AudioManager: ObservableObject {
     private let deviceManager = AudioDeviceManager.shared
     private var controllers: [pid_t: AppAudioController] = [:]
     private var pollTimer: Timer?
+    private var deviceListListener: AudioPropertyListenerToken?
+    private var defaultOutputListener: AudioPropertyListenerToken?
+    private var volumeListener: AudioPropertyListenerToken?
     private var isRestarting = false // guard against re-entrant restarts
 
     init() {
@@ -26,6 +29,18 @@ final class AudioManager: ObservableObject {
         refreshSystemVolume()
         refreshAudioApps()
         startMonitoring()
+    }
+
+    deinit {
+        MainActor.assumeIsolated {
+            pollTimer?.invalidate()
+            deviceListListener?.invalidate()
+            defaultOutputListener?.invalidate()
+            volumeListener?.invalidate()
+            for controller in controllers.values {
+                controller.stop()
+            }
+        }
     }
 
     // MARK: - Public API
@@ -135,13 +150,13 @@ final class AudioManager: ObservableObject {
             }
         }
 
-        try? deviceManager.onDeviceListChanged { [weak self] in
+        deviceListListener = try? deviceManager.onDeviceListChanged { [weak self] in
             Task { @MainActor [weak self] in
                 self?.refreshDevices()
             }
         }
 
-        try? deviceManager.onDefaultOutputDeviceChanged { [weak self] in
+        defaultOutputListener = try? deviceManager.onDefaultOutputDeviceChanged { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self = self else { return }
                 self.refreshDevices()
@@ -156,7 +171,8 @@ final class AudioManager: ObservableObject {
 
     private func listenForVolumeChanges() {
         guard selectedOutputDeviceID != kAudioObjectUnknown else { return }
-        try? deviceManager.onVolumeChanged(deviceID: selectedOutputDeviceID) { [weak self] in
+        volumeListener?.invalidate()
+        volumeListener = try? deviceManager.onVolumeChanged(deviceID: selectedOutputDeviceID) { [weak self] in
             Task { @MainActor [weak self] in
                 self?.refreshSystemVolume()
             }

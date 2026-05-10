@@ -91,7 +91,7 @@ final class AudioDeviceManager: @unchecked Sendable {
 
     // MARK: - Listeners
 
-    func onDefaultOutputDeviceChanged(_ handler: @escaping @Sendable () -> Void) throws {
+    func onDefaultOutputDeviceChanged(_ handler: @escaping @Sendable () -> Void) throws -> AudioPropertyListenerToken {
         try addAudioPropertyListener(
             objectID: AudioObjectID(kAudioObjectSystemObject),
             address: audioObjectPropertyAddress(selector: kAudioHardwarePropertyDefaultOutputDevice)
@@ -100,7 +100,7 @@ final class AudioDeviceManager: @unchecked Sendable {
         }
     }
 
-    func onVolumeChanged(deviceID: AudioObjectID, _ handler: @escaping @Sendable () -> Void) throws {
+    func onVolumeChanged(deviceID: AudioObjectID, _ handler: @escaping @Sendable () -> Void) throws -> AudioPropertyListenerToken {
         try addAudioPropertyListener(
             objectID: deviceID,
             address: audioObjectPropertyAddress(
@@ -112,7 +112,7 @@ final class AudioDeviceManager: @unchecked Sendable {
         }
     }
 
-    func onDeviceListChanged(_ handler: @escaping @Sendable () -> Void) throws {
+    func onDeviceListChanged(_ handler: @escaping @Sendable () -> Void) throws -> AudioPropertyListenerToken {
         try addAudioPropertyListener(
             objectID: AudioObjectID(kAudioObjectSystemObject),
             address: audioObjectPropertyAddress(selector: kAudioHardwarePropertyDevices)

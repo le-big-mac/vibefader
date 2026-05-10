@@ -88,16 +88,54 @@ func setAudioPropertyData<T>(
 
 // MARK: - Property Listener
 
+final class AudioPropertyListenerToken: @unchecked Sendable {
+    private let objectID: AudioObjectID
+    private var address: AudioObjectPropertyAddress
+    private let queue: DispatchQueue
+    private let listener: AudioObjectPropertyListenerBlock
+    private var isValid = true
+
+    init(
+        objectID: AudioObjectID,
+        address: AudioObjectPropertyAddress,
+        queue: DispatchQueue,
+        listener: @escaping AudioObjectPropertyListenerBlock
+    ) {
+        self.objectID = objectID
+        self.address = address
+        self.queue = queue
+        self.listener = listener
+    }
+
+    deinit {
+        invalidate()
+    }
+
+    func invalidate() {
+        guard isValid else { return }
+        isValid = false
+        AudioObjectRemovePropertyListenerBlock(objectID, &address, queue, listener)
+    }
+}
+
+@discardableResult
 func addAudioPropertyListener(
     objectID: AudioObjectID,
     address: AudioObjectPropertyAddress,
     listener: @escaping AudioObjectPropertyListenerBlock
-) throws {
+) throws -> AudioPropertyListenerToken {
     var address = address
-    let status = AudioObjectAddPropertyListenerBlock(objectID, &address, DispatchQueue.main, listener)
+    let queue = DispatchQueue.main
+    let status = AudioObjectAddPropertyListenerBlock(objectID, &address, queue, listener)
     guard status == kAudioHardwareNoError else {
         throw AudioError.propertyError(status)
     }
+    return AudioPropertyListenerToken(
+        objectID: objectID,
+        address: address,
+        queue: queue,
+        listener: listener
+    )
 }
 
 
