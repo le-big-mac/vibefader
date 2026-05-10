@@ -133,7 +133,8 @@ final class AppAudioController: @unchecked Sendable {
 
             if numBufs == 1 && nch > 1 {
                 // INTERLEAVED: single buffer with L0,R0,L1,R1,...
-                let src = abl[0].mData!.assumingMemoryBound(to: Float.self)
+                guard let data = abl[0].mData else { return }
+                let src = data.assumingMemoryBound(to: Float.self)
                 let totalSamples = Int(abl[0].mDataByteSize) / MemoryLayout<Float>.size
                 let frameCount = totalSamples / nch
 
@@ -147,7 +148,8 @@ final class AppAudioController: @unchecked Sendable {
                 // NON-INTERLEAVED: one buffer per channel
                 let frameCount = Int(abl[0].mDataByteSize) / MemoryLayout<Float>.size
                 for ch in 0..<min(nch, numBufs) {
-                    let src = abl[ch].mData!.assumingMemoryBound(to: Float.self)
+                    guard let data = abl[ch].mData else { continue }
+                    let src = data.assumingMemoryBound(to: Float.self)
                     let dst = ctrl.ringChannels[ch]
                     for f in 0..<frameCount {
                         dst[(wp + f) % cap] = src[f]
@@ -196,9 +198,17 @@ final class AppAudioController: @unchecked Sendable {
 
             let g = ctrl.gain
 
-            for ch in 0..<chCount {
+            for ch in 0..<abl.count {
+                guard let data = abl[ch].mData else { continue }
+                let dst = data.assumingMemoryBound(to: Float.self)
+                guard ch < chCount else {
+                    for f in 0..<frames {
+                        dst[f] = 0
+                    }
+                    continue
+                }
+
                 let src = ctrl.ringChannels[ch]
-                let dst = abl[ch].mData!.assumingMemoryBound(to: Float.self)
                 for f in 0..<frames {
                     let sample = src[(rp + f) % cap] * vol * g
                     // Soft clip to prevent distortion from gain boost
