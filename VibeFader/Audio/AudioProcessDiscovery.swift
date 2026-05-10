@@ -27,6 +27,8 @@ final class AudioProcessDiscovery: @unchecked Sendable {
     private static let processObjectListSelector = AudioObjectPropertySelector(0x70727323)
     // 'ppid' - PID of an audio process object
     private static let processPIDSelector = AudioObjectPropertySelector(0x70706964)
+    // 'piro' - whether the process currently has active output IO
+    private static let processIsRunningOutputSelector = AudioObjectPropertySelector(0x7069726F)
     private static let knownAudioDaemons: [String: (bundleID: String, displayName: String)] = [
         "avconferenced": ("com.apple.avconferenced", "avconferenced"),
         "callservicesd": ("com.apple.callservicesd", "callservicesd"),
@@ -60,7 +62,8 @@ final class AudioProcessDiscovery: @unchecked Sendable {
             }
         }
 
-        return results.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        return deduplicate(results)
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
 
     /// Look up the Core Audio process object ID for a given PID.
@@ -98,6 +101,35 @@ final class AudioProcessDiscovery: @unchecked Sendable {
                 )
             }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
+
+    private func deduplicate(_ processes: [AudioProcess]) -> [AudioProcess] {
+        var keyed: [String: AudioProcess] = [:]
+
+        for process in processes {
+            let key = "\(process.bundleIdentifier)|\(process.name)"
+            guard let existing = keyed[key] else {
+                keyed[key] = process
+                continue
+            }
+
+            if shouldPrefer(process, over: existing) {
+                keyed[key] = process
+            }
+        }
+
+        return Array(keyed.values)
+    }
+
+    private func shouldPrefer(_ candidate: AudioProcess, over existing: AudioProcess) -> Bool {
+        let candidateIsOutputting = isRunningOutput(pid: candidate.pid)
+        let existingIsOutputting = isRunningOutput(pid: existing.pid)
+
+        if candidateIsOutputting != existingIsOutputting {
+            return candidateIsOutputting
+        }
+
+        return candidate.pid < existing.pid
     }
 
     private func audioProcess(for pid: pid_t, runningApps: [NSRunningApplication]) -> AudioProcess? {
@@ -177,6 +209,19 @@ final class AudioProcessDiscovery: @unchecked Sendable {
         let length = proc_name(pid, &buffer, UInt32(buffer.count))
         guard length > 0 else { return nil }
         return String(cString: buffer)
+    }
+
+    private func isRunningOutput(pid: pid_t) -> Bool {
+        guard let objectID = processObjectID(for: pid),
+              let isRunning: UInt32 = try? getAudioPropertyData(
+                objectID: objectID,
+                address: audioObjectPropertyAddress(selector: Self.processIsRunningOutputSelector),
+                type: UInt32.self
+              ) else {
+            return false
+        }
+
+        return isRunning != 0
     }
 
     private func fallbackIcon() -> NSImage {
