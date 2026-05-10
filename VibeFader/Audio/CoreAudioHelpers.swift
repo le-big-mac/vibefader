@@ -71,14 +71,29 @@ func getAudioPropertyString(
     return cfStr as String
 }
 
-func setAudioPropertyData<T>(
+func setAudioPropertyData(
     objectID: AudioObjectID,
     address: AudioObjectPropertyAddress,
-    value: T
+    value: AudioObjectID
 ) throws {
     var address = address
     var value = value
-    let size = UInt32(MemoryLayout<T>.size)
+    let size = UInt32(MemoryLayout<AudioObjectID>.size)
+
+    let status = AudioObjectSetPropertyData(objectID, &address, 0, nil, size, &value)
+    guard status == kAudioHardwareNoError else {
+        throw AudioError.propertyError(status)
+    }
+}
+
+func setAudioPropertyData(
+    objectID: AudioObjectID,
+    address: AudioObjectPropertyAddress,
+    value: Float32
+) throws {
+    var address = address
+    var value = value
+    let size = UInt32(MemoryLayout<Float32>.size)
 
     let status = AudioObjectSetPropertyData(objectID, &address, 0, nil, size, &value)
     guard status == kAudioHardwareNoError else {
