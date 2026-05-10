@@ -71,8 +71,13 @@ final class AudioManager: ObservableObject {
     }
 
     func selectOutputDevice(_ deviceID: AudioObjectID) {
-        selectedOutputDeviceID = deviceID
-        try? deviceManager.setDefaultOutputDevice(deviceID)
+        do {
+            try deviceManager.setDefaultOutputDevice(deviceID)
+            handleDefaultOutputDeviceChanged(forceRestart: true)
+        } catch {
+            NSLog("[VibeFader] Failed to select output device \(deviceID): \(error)")
+            refreshDevices()
+        }
     }
 
     func refreshAudioApps() {
@@ -159,10 +164,7 @@ final class AudioManager: ObservableObject {
         defaultOutputListener = try? deviceManager.onDefaultOutputDeviceChanged { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self = self else { return }
-                self.refreshDevices()
-                self.refreshSystemVolume()
-                self.restartActiveControllers()
-                self.listenForVolumeChanges()
+                self.handleDefaultOutputDeviceChanged()
             }
         }
 
@@ -177,6 +179,19 @@ final class AudioManager: ObservableObject {
                 self?.refreshSystemVolume()
             }
         }
+    }
+
+    private func handleDefaultOutputDeviceChanged(forceRestart: Bool = false) {
+        let previousDeviceID = selectedOutputDeviceID
+
+        refreshDevices()
+        refreshSystemVolume()
+
+        if forceRestart || selectedOutputDeviceID != previousDeviceID {
+            restartActiveControllers()
+        }
+
+        listenForVolumeChanges()
     }
 
     private func restartActiveControllers() {
