@@ -4,7 +4,18 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
-export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+
+if [ -z "${DEVELOPER_DIR:-}" ] && [ -d /Applications/Xcode.app/Contents/Developer ]; then
+  export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+fi
+
+if ! command -v xcodegen >/dev/null 2>&1; then
+  echo "xcodegen is required. Install it with: brew install xcodegen"
+  exit 1
+fi
+
+echo "Generating Xcode project..."
+xcodegen generate
 
 echo "Building VibeFader (Release)..."
 xcodebuild -project VibeFader.xcodeproj \
